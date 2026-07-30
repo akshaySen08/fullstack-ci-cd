@@ -15,3 +15,7 @@ coverage/
 
 # Operating system
 .DS_Store
+
+.env
+apps/api/.env
+apps/api/src/generated/

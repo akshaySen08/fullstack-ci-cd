@@ -1,0 +1,33 @@
+services:
+  postgres:
+    image: postgres:18.4-alpine
+    container_name: taskflow-postgres
+
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+
+    volumes:
+      - taskflow_postgres_data:/var/lib/postgresql
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  taskflow_postgres_data:
+
+#   Why do we need the health check?
+
+# A running container does not necessarily mean PostgreSQL is ready to accept connections. pg_isready lets Docker determine when the database is actually ready. Later, our API container will wait for this health check before starting.
+
+# The named volume keeps database data even when the PostgreSQL container is removed and recreated.
