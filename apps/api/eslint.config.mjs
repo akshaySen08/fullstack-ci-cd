@@ -17,7 +17,7 @@ export default tseslint.config(
   ...tseslint.configs.recommendedTypeChecked,
 
   {
-    files: ["src/**/*.ts", "tests/**/*.ts", "vitest.config.ts"],
+    files: ["src/**/*.ts", "tests/**/*.ts", "vitest.config.ts", "prisma.config.ts"],
 
     languageOptions: {
       globals: {

@@ -1,2 +1,6 @@
 Start backend
-        - 
+        - docker compose down
+        - docker compose up -d postgres
+        - cd apps/api
+        - npm run dev - To start apis
+        - npx prisma studio - To start prisma studio
