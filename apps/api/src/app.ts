@@ -5,6 +5,7 @@ import { env } from "./config/env.js";
 import { healthRouter } from "./routes/health.routes.js";
 import { notFoundHandler } from "./middlewares/not-found.js";
 import { errorhandler } from "./middlewares/error-handler.js";
+import { taskRouter } from "./routes/task.routes.js";
 
 export const app = express();
 
@@ -39,5 +40,6 @@ app.use(
 
 // Register the health check routes under the "/api" path
 app.use("/api", healthRouter);
+app.use("/api/v1/tasks", taskRouter);
 app.use(notFoundHandler);
 app.use(errorhandler);

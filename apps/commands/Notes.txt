@@ -1,0 +1,71 @@
+- Important: Liveness vs readiness
+
+    Since you've already built the health APIs, this is where we make them useful for deployment.
+
+    We should distinguish:
+        Liveness
+        "Is the Node process alive?"
+
+        Readiness
+        "Can this API actually serve traffic?"
+
+    That's an important distinction.
+    Liveness
+    Your liveness endpoint should not query PostgreSQL.
+
+--------------------------------------------------------------
+
+Next apis to build - 
+
+Task CRUD API
+│
+├── POST   /api/v1/tasks
+├── GET    /api/v1/tasks
+├── GET    /api/v1/tasks/:id
+├── PATCH  /api/v1/tasks/:id
+└── DELETE /api/v1/tasks/:id
+
+------------------------------------------------------------------
+
+route
+  ↓
+controller
+  ↓
+service
+  ↓
+repository
+  ↓
+Prisma
+  ↓
+PostgreSQL
+
+------------------------------------------------------------------
+
+curl / frontend
+       │
+       ▼
+POST /api/v1/tasks
+       │
+       ▼
+task.routes.ts
+       │
+       ▼
+task.controller.ts
+       │
+       ├── Zod validates HTTP data
+       │
+       ▼
+task.service.ts
+       │
+       ├── converts dueDate
+       │
+       ├── prepares business data
+       │
+       ▼
+task.repository.ts
+       │
+       ▼
+prisma.task.create()
+       │
+       ▼
+PostgreSQL
