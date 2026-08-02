@@ -69,3 +69,12 @@ prisma.task.create()
        │
        ▼
 PostgreSQL
+
+---------------------------------------------------------
+Why we used ZodSchema in controllers and inferred type in services - 
+
+- Controller uses the Zod schema because controllers receive untrusted HTTP input and need runtime validation/parsing.
+       In task.controllers.ts, createTaskBodySchema.parse(req.body) checks shape, required fields, enums, date format, defaults/coercions, and throws a proper validation error if invalid.
+
+- Service uses the inferred TypeScript type because services operate on already-validated data and mainly need compile-time guarantees.
+       In task.service.ts, CreateTaskInput tells TypeScript what shape service input must have, but adds zero runtime cost.
