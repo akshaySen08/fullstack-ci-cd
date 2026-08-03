@@ -1,10 +1,16 @@
 import type { Prisma } from "../generated/prisma/client.js";
-import type { CreateTaskInput, GetTasksQuery } from "../schemas/task.schema.js";
+import type {
+  CreateTaskInput,
+  GetTaskByIdParams,
+  GetTasksQuery,
+} from "../schemas/task.schema.js";
 import {
   countTasks,
   createTask as createTaskRepository,
   getTasks as getTasksRepository,
+  getTaskById as getTaskByIdRepository,
 } from "../repositories/task.repository.js";
+import { ApiError } from "../errors/api-error.js";
 
 export function createTaskService(input: CreateTaskInput) {
   const data: Prisma.TaskCreateInput = {
@@ -59,4 +65,14 @@ export async function getTasksService(params: GetTasksQuery) {
       totalPages: Math.ceil(total / params.limit),
     },
   };
+}
+
+export async function getTaskByIdService(params: GetTaskByIdParams) {
+  const task = await getTaskByIdRepository(params.id);
+
+  if (!task) {
+    throw new ApiError(404, "Task was not found.", "TASK_NOT_FOUND");
+  }
+
+  return task;
 }
