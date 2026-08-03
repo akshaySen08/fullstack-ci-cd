@@ -12,7 +12,7 @@ type TasksListItem = {
 };
 
 interface TaskListResponse {
-    success: string;
+  success: boolean;
   data: TasksListItem[];
   pagination: {
     total: number;
@@ -25,8 +25,37 @@ describe("Task API", () => {
   it("should create a new task", async () => {
     // Test implementation here
   });
+
+  it("should return 404 for non-existent task", async () => {
+    const nonExistentTaskId = "00000000-0000-0000-0000-000000000000"; // Use a valid UUID format that doesn't exist in the database
+
+    const response = await request(app).get(
+      `/api/v1/tasks/${nonExistentTaskId}`,
+    );
+    console.log(response.body);
+    expect(response.status).toBe(404);
+    expect(response.body).toMatchObject({
+      success: false,
+      error: {
+        code: "TASK_NOT_FOUND",
+        message: "Task was not found.",
+      },
+    });
+  });
+
   it("should retrieve a task by ID", async () => {
     // Test implementation here
+    const existingTaskId = "f8f14927-2289-4905-a31d-1d7a2c39b3f1"; // Use a valid UUID format that exists in the database
+
+    const response = await request(app).get(`/api/v1/tasks/${existingTaskId}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toMatchObject({
+      success: true,
+      data: {
+        id: existingTaskId,
+      },
+    });
   });
   it("should update a task", async () => {
     // Test implementation here

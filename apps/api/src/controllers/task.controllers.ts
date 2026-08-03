@@ -40,13 +40,6 @@ const getTaskByIdController = async (req: Request, res: Response) => {
 
   const task = await getTaskByIdService({ id });
 
-  if (!task) {
-    return res.status(404).json({
-      success: false,
-      message: "Task not found",
-    });
-  }
-
   return res.status(200).json({
     success: true,
     data: task,
