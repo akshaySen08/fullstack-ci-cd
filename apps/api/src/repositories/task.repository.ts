@@ -36,3 +36,17 @@ export async function countTasks(where: Prisma.TaskWhereInput) {
 export async function getTaskById(id: string) {
   return prisma.task.findUnique({ where: { id } });
 }
+
+export async function patchTaskById(
+  id: string,
+  data: Prisma.TaskUpdateManyMutationInput,
+) {
+  const tasks = await prisma.task.updateManyAndReturn({
+    where: {
+      id,
+    },
+    data,
+  });
+
+  return tasks[0] ?? null;
+}

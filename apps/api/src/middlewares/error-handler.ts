@@ -16,7 +16,7 @@ export const errorhandler: ErrorRequestHandler = (
       success: false,
       error: {
         code: "VALIDATION_ERROR",
-        message: "The submitted request is invalid",
+        message: "The submitted request is invalid.",
         details: error.issues,
       },
     });

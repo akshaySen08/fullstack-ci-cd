@@ -14,24 +14,11 @@ export const createTaskBodySchema = z.strictObject({
     .nullable()
     .optional(),
 
-  status: z
-    .enum([
-      "TODO",
-      "IN_PROGRESS",
-      "COMPLETED",
-    ])
-    .optional(),
+  status: z.enum(["TODO", "IN_PROGRESS", "COMPLETED"]).optional(),
 
-  priority: z
-    .enum([
-      "LOW",
-      "MEDIUM",
-      "HIGH",
-    ])
-    .optional(),
+  priority: z.enum(["LOW", "MEDIUM", "HIGH"]).optional(),
 
-  dueDate: z
-    .iso
+  dueDate: z.iso
     .datetime({
       offset: true,
     })
@@ -40,48 +27,29 @@ export const createTaskBodySchema = z.strictObject({
 });
 
 export const getTasksQuerySchema = z.strictObject({
-  page: z.coerce
-    .number()
-    .int()
-    .min(1)
-    .default(1),
+  page: z.coerce.number().int().min(1).default(1),
 
-  limit: z.coerce
-    .number()
-    .int()
-    .min(1)
-    .max(100)
-    .default(10),
+  limit: z.coerce.number().int().min(1).max(100).default(10),
 
-  status: z
-    .enum([
-      "TODO",
-      "IN_PROGRESS",
-      "COMPLETED",
-    ])
-    .optional(),
+  status: z.enum(["TODO", "IN_PROGRESS", "COMPLETED"]).optional(),
 
-  priority: z
-    .enum([
-      "LOW",
-      "MEDIUM",
-      "HIGH",
-    ])
-    .optional(),
+  priority: z.enum(["LOW", "MEDIUM", "HIGH"]).optional(),
 });
 
 export const getTaskByIdParamsSchema = z.strictObject({
   id: z.uuid("Invalid task ID format."),
 });
 
-export type CreateTaskInput = z.infer<
-  typeof createTaskBodySchema
->;
+export const patchTaskBodySchema = createTaskBodySchema
+  .partial()
+  .refine((input) => Object.keys(input).length > 0, {
+    message: "At least one Task field must be provided.",
+  });
 
-export type GetTasksQuery = z.infer<
-  typeof getTasksQuerySchema
->;
+export type CreateTaskInput = z.infer<typeof createTaskBodySchema>;
 
-export type GetTaskByIdParams = z.infer<
-  typeof getTaskByIdParamsSchema
->;
+export type GetTasksQuery = z.infer<typeof getTasksQuerySchema>;
+
+export type GetTaskByIdParams = z.infer<typeof getTaskByIdParamsSchema>;
+
+export type PatchTaskInput = z.infer<typeof patchTaskBodySchema>;

@@ -2,12 +2,14 @@ import {
   createTaskBodySchema,
   getTaskByIdParamsSchema,
   getTasksQuerySchema,
+  patchTaskBodySchema,
 } from "../schemas/task.schema.js";
 import type { Request, Response } from "express";
 import {
   createTaskService,
   getTaskByIdService,
   getTasksService,
+  patchTaskService,
 } from "../services/task.service.js";
 
 const createTaskController = async (req: Request, res: Response) => {
@@ -46,4 +48,20 @@ const getTaskByIdController = async (req: Request, res: Response) => {
   });
 };
 
-export { createTaskController, getTasksController, getTaskByIdController };
+const patchTaskController = async (req: Request, res: Response) => {
+  const params = getTaskByIdParamsSchema.parse(req.params);
+  const input = patchTaskBodySchema.parse(req.body);
+
+  const task = await patchTaskService(params.id, input);
+  return res.status(200).json({
+    success: true,
+    data: { task },
+  });
+};
+
+export {
+  createTaskController,
+  getTasksController,
+  getTaskByIdController,
+  patchTaskController,
+};
