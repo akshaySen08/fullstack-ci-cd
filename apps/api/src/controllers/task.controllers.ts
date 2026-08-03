@@ -1,10 +1,12 @@
 import {
   createTaskBodySchema,
+  getTaskByIdParamsSchema,
   getTasksQuerySchema,
 } from "../schemas/task.schema.js";
 import type { Request, Response } from "express";
 import {
   createTaskService,
+  getTaskByIdService,
   getTasksService,
 } from "../services/task.service.js";
 
@@ -22,7 +24,7 @@ const createTaskController = async (req: Request, res: Response) => {
 };
 
 const getTasksController = async (req: Request, res: Response) => {
-  const query =  getTasksQuerySchema.parse(req.query);
+  const query = getTasksQuerySchema.parse(req.query);
 
   const result = await getTasksService(query);
 
@@ -33,4 +35,15 @@ const getTasksController = async (req: Request, res: Response) => {
   });
 };
 
-export { createTaskController, getTasksController };
+const getTaskByIdController = async (req: Request, res: Response) => {
+  const { id } = getTaskByIdParamsSchema.parse(req.params);
+
+  const task = await getTaskByIdService({ id });
+
+  return res.status(200).json({
+    success: true,
+    data: task,
+  });
+};
+
+export { createTaskController, getTasksController, getTaskByIdController };

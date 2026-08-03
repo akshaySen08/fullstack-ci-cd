@@ -32,3 +32,7 @@ export async function countTasks(where: Prisma.TaskWhereInput) {
     where,
   });
 }
+
+export async function getTaskById(id: string) {
+  return prisma.task.findUnique({ where: { id } });
+}

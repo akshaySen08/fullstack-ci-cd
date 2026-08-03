@@ -70,10 +70,18 @@ export const getTasksQuerySchema = z.strictObject({
     .optional(),
 });
 
+export const getTaskByIdParamsSchema = z.strictObject({
+  id: z.uuid("Invalid task ID format."),
+});
+
 export type CreateTaskInput = z.infer<
   typeof createTaskBodySchema
 >;
 
 export type GetTasksQuery = z.infer<
   typeof getTasksQuerySchema
+>;
+
+export type GetTaskByIdParams = z.infer<
+  typeof getTaskByIdParamsSchema
 >;
