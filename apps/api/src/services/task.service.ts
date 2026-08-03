@@ -3,12 +3,14 @@ import type {
   CreateTaskInput,
   GetTaskByIdParams,
   GetTasksQuery,
+  PatchTaskInput,
 } from "../schemas/task.schema.js";
 import {
   countTasks,
   createTask as createTaskRepository,
   getTasks as getTasksRepository,
   getTaskById as getTaskByIdRepository,
+  patchTaskById as patchTaskByIdRepository,
 } from "../repositories/task.repository.js";
 import { ApiError } from "../errors/api-error.js";
 
@@ -75,4 +77,39 @@ export async function getTaskByIdService(params: GetTaskByIdParams) {
   }
 
   return task;
+}
+
+export async function patchTaskService(
+  id: string,
+  input: PatchTaskInput,
+) {
+  const data: Prisma.TaskUpdateManyMutationInput = {};
+
+  if (input.title !== undefined) {
+    data.title = input.title;
+  }
+
+  if (input.description !== undefined) {
+    data.description = input.description;
+  }
+
+  if (input.status !== undefined) {
+    data.status = input.status;
+  }
+
+  if (input.priority !== undefined) {
+    data.priority = input.priority;
+  }
+
+  if (input.dueDate !== undefined) {
+    data.dueDate = input.dueDate !== null ? new Date(input.dueDate) : null;
+  }
+
+  const updatedTask = await patchTaskByIdRepository(id, data);
+
+  if (!updatedTask) {
+    throw new ApiError(404, "Task was not found.", "TASK_NOT_FOUND");
+  }
+
+  return updatedTask;
 }
