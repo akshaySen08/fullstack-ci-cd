@@ -10,6 +10,7 @@ import {
   getTaskByIdService,
   getTasksService,
   patchTaskService,
+  deleteTaskService,
 } from "../services/task.service.js";
 
 const createTaskController = async (req: Request, res: Response) => {
@@ -59,9 +60,18 @@ const patchTaskController = async (req: Request, res: Response) => {
   });
 };
 
+const deleteTaskController = async (req: Request, res: Response) => {
+  const { id } = getTaskByIdParamsSchema.parse(req.params);
+
+  await deleteTaskService({ id });
+
+  return res.status(204).send();
+};
+
 export {
   createTaskController,
   getTasksController,
   getTaskByIdController,
   patchTaskController,
+  deleteTaskController,
 };
