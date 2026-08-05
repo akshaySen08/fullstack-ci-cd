@@ -4,7 +4,6 @@ import type {
   GetTaskByIdParams,
   GetTasksQuery,
   PatchTaskInput,
-  DeleteTaskParams,
 } from "../schemas/task.schema.js";
 import {
   countTasks,
@@ -113,13 +112,11 @@ export async function patchTaskService(id: string, input: PatchTaskInput) {
   return updatedTask;
 }
 
-export async function deleteTaskService(params: DeleteTaskParams) {
-  const existingTask = await getTaskByIdRepository(params.id);
+export async function deleteTaskService(params: GetTaskByIdParams) {
+  // const existingTask = await getTaskByIdRepository(params.id);
+  const result = await deleteTaskByIdRepository(params.id);
 
-  if (!existingTask) {
+  if (!result) {
     throw new ApiError(404, "Task was not found.", "TASK_NOT_FOUND");
   }
-
-  await deleteTaskByIdRepository(params.id);
-  
 }

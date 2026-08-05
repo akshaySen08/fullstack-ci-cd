@@ -3,7 +3,6 @@ import {
   getTaskByIdParamsSchema,
   getTasksQuerySchema,
   patchTaskBodySchema,
-  deleteTaskParamSchema,
 } from "../schemas/task.schema.js";
 import type { Request, Response } from "express";
 import {
@@ -62,7 +61,7 @@ const patchTaskController = async (req: Request, res: Response) => {
 };
 
 const deleteTaskController = async (req: Request, res: Response) => {
-  const { id } = deleteTaskParamSchema.parse(req.params);
+  const { id } = getTaskByIdParamsSchema.parse(req.params);
 
   await deleteTaskService({ id });
 

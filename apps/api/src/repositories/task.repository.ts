@@ -52,7 +52,7 @@ export async function patchTaskById(
 }
 
 export async function deleteTaskById(id: string) {
-  return prisma.task.delete({
+  return prisma.task.deleteMany({
     where: {
       id,
     },
