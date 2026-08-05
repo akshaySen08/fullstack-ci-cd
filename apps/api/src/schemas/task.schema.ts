@@ -46,6 +46,10 @@ export const patchTaskBodySchema = createTaskBodySchema
     message: "At least one Task field must be provided.",
   });
 
+export const deleteTaskParamSchema = z.strictObject({
+  id: z.uuid("Invalid task ID format."),
+});
+
 export type CreateTaskInput = z.infer<typeof createTaskBodySchema>;
 
 export type GetTasksQuery = z.infer<typeof getTasksQuerySchema>;
@@ -53,3 +57,5 @@ export type GetTasksQuery = z.infer<typeof getTasksQuerySchema>;
 export type GetTaskByIdParams = z.infer<typeof getTaskByIdParamsSchema>;
 
 export type PatchTaskInput = z.infer<typeof patchTaskBodySchema>;
+
+export type DeleteTaskParams = z.infer<typeof deleteTaskParamSchema>;

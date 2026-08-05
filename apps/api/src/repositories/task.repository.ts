@@ -50,3 +50,11 @@ export async function patchTaskById(
 
   return tasks[0] ?? null;
 }
+
+export async function deleteTaskById(id: string) {
+  return prisma.task.delete({
+    where: {
+      id,
+    },
+  });
+}
