@@ -17,17 +17,58 @@ services:
       - taskflow_postgres_data:/var/lib/postgresql
 
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 5
       start_period: 10s
 
+  migrate:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+      target: migrator
+
+    container_name: taskflow-migrate
+
+    environment:
+      DATABASE_URL: >-
+        postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    restart: "no"
+
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+      target: runner
+
+    container_name: taskflow-api
+
+    restart: unless-stopped
+
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 4000
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:5173}
+
+      DATABASE_URL: >-
+        postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
+
+    ports:
+      - "${API_PORT:-4000}:4000"
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+      migrate:
+        condition: service_completed_successfully
+
 volumes:
   taskflow_postgres_data:
-
-#   Why do we need the health check?
-
-# A running container does not necessarily mean PostgreSQL is ready to accept connections. pg_isready lets Docker determine when the database is actually ready. Later, our API container will wait for this health check before starting.
-
-# The named volume keeps database data even when the PostgreSQL container is removed and recreated.
