@@ -8,17 +8,13 @@ const environmentSchema = z.object({
     .enum(["development", "test", "production"])
     .default("development"),
 
-  PORT: z.coerce
-    .number()
-    .int()
-    .min(1)
-    .max(65535)
-    .default(4000),
+  HOST: z.string().min(1).default("0.0.0.0"),
 
-  CORS_ORIGIN: z
-    .string()
-    .url()
-    .default("http://localhost:5173"),
+  PORT: z.coerce.number().int().min(1).max(65535).default(4000),
+
+  CORS_ORIGIN: z.url().default("http://localhost:5173"),
+
+  DATABASE_URL: z.string().min(1, "DATABASE_URL is required."),
 });
 
 const parsedEnvironment = environmentSchema.safeParse(process.env);

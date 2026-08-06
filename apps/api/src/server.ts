@@ -10,8 +10,8 @@ async function startServer(): Promise<void> {
 
     const httpServer = createServer(app);
 
-    httpServer.listen(env.PORT, () => {
-      console.log(`🚀 TaskFlow API running at http://localhost:${env.PORT}`);
+    httpServer.listen(env.PORT, env.HOST, () => {
+      console.log(`🚀 TaskFlow API running at http://${env.HOST}:${env.PORT}`);
     });
 
     let shutdownStarted = false;
